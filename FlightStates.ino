@@ -65,14 +65,15 @@ void Idle() {
 
 void LaunchReady() {
 	digitalWrite(LEDPin_red, HIGH);
-	// TODO: Acquire acceleration data
-	
-	// TODO: If high acceleration in z direction (towards nosecone)
-
-	delay(1000);
-	digitalWrite(LEDPin_red, LOW);
-	delay(1000);
-	SwitchStateTo(Boost_State);
+	// Acquire acceleration data
+	imu::Vector<3> linaccel = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
+	// If high acceleration in z direction (towards nosecone)
+	if (linaccel.z > 50) {
+		delay(1000);
+		digitalWrite(LEDPin_red, LOW);
+		delay(1000);
+		SwitchStateTo(Boost_State);
+	}
 }
 
 #define BOOST_TIME 4000
@@ -108,7 +109,18 @@ void Recovery() {
 	// Close SD IO
 	BenchFile.close();
 	
-	// TODO: Cycle Lights and Buzzer
+	// Cycle Lights and Buzzer
+	digitalWrite(LEDPin_green, HIGH);
+	digitalWrite(LEDPin_yellow, HIGH);
+	digitalWrite(LEDPin_red, LOW);
+	digitalWrite(LEDPin_blue, LOW);
+	tone(buzzerPin, 1000);
+	delay(3000);
+	digitalWrite(LEDPin_green, LOW);
+	digitalWrite(LEDPin_yellow, LOW);
+	digitalWrite(LEDPin_red, HIGH);
+	digitalWrite(LEDPin_blue, HIGH);
+	noTone(buzzerPin);
 	
 	WaitForUserButton();
 	{
