@@ -29,11 +29,13 @@ void orientation(float orient[6])) {
   orient[2] = yaw;
   orient[3] = roll;
 
-  //Assigng Pitch rate, Yaw rate, and Roll rate to elements of orient[] array
+  //Assigning Pitch rate, Yaw rate, and Roll rate to elements of orient[] array
   orient[4] = pitch_rate;
   orient[5] = yaw_rate;
   orient[6] = roll_rate;
 
+  //Plotting Pitch, Yaw, and Roll
+  plotOrientation(pitch,yaw,roll);
 }
 
 void quaternionToEuler(float qx, float qy, float qz, float qw, float *pitch, float *yaw, float *roll) {
@@ -50,4 +52,16 @@ imu::Quaternion quaternionConjugate(imu::Quaternion quat) {
   conj.y() = -quat.y();
   conj.z() = -quat.z();
   return conj;  
+}
+
+void plotOrientation(float pitch, float yaw, float roll) {
+  // Display angles in the Serial Plotter
+  Serial.print("Pitch:");
+  Serial.print(pitch);
+  Serial.print(",");
+  Serial.print("Yaw:");
+  Serial.println(yaw);
+  Serial.print(",");
+  Serial.print("Roll:");
+  Serial.println(roll);
 }
