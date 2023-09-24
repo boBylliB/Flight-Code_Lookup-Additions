@@ -1,39 +1,39 @@
 void orientation(float orient[6]) {
-	//Create quaternion object and get quaternion data from BNO055
+	// Create quaternion object and get quaternion data from BNO055
 	imu::Quaternion quat = bno.getQuat();
 
-	//Get conjugate of quaternion from BNO055
+	// Get conjugate of quaternion from BNO055
 	imu::Quaternion quatconj = quaternionConjugate(quat);
 
-	//Create 3-axis vector for angular velocity
+	// Create 3-axis vector for angular velocity
 	imu::Vector<3> angvel = bno.getVector(Adafruit_BNO055::VECTOR_GYROSCOPE);
 
-	//Assign conjugate quaternion values to variables
+	// Assign conjugate quaternion values to variables
 	float qw = quatconj.w();
 	float qx = quatconj.x();
 	float qy = quatconj.y();
 	float qz = quatconj.z();
 
-	//Get angular rate data from BNO055
+	// Get angular rate data from BNO055
 	float pitch_rate = angvel.x();
 	float yaw_rate = angvel.y();
 	float roll_rate = angvel.z();
 
-	//Convert quaternion data to Euler angles
+	// Convert quaternion data to Euler angles
 	float pitch, yaw, roll;
 	quaternionToEuler(qx,qy,qz,qw,&pitch,&yaw,&roll);
 
-	//Assigning Pitch, Yaw, and Roll to elements of orient[] array
+	// Assigning Pitch, Yaw, and Roll to elements of orient[] array
 	orient[1] = pitch;
 	orient[2] = yaw;
 	orient[3] = roll;
 
-	//Assigning Pitch rate, Yaw rate, and Roll rate to elements of orient[] array
+	// Assigning Pitch rate, Yaw rate, and Roll rate to elements of orient[] array
 	orient[4] = pitch_rate;
 	orient[5] = yaw_rate;
 	orient[6] = roll_rate;
 
-	//Plotting Pitch, Yaw, and Roll
+	// Plotting Pitch, Yaw, and Roll
 	plotOrientation(pitch,yaw,roll);
 }
 
