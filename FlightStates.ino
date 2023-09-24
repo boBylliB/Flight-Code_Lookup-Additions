@@ -65,15 +65,17 @@ void Idle() {
 
 void LaunchReady() {
 	digitalWrite(LEDPin_red, HIGH);
+ 
 	// Acquire acceleration data
-	imu::Vector<3> linaccel = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
+	/*imu::Vector<3> linaccel = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
+ 
 	// If high acceleration in z direction (towards nosecone)
 	if (linaccel.z > 50) {
 		delay(1000);
 		digitalWrite(LEDPin_red, LOW);
 		delay(1000);
 		SwitchStateTo(Boost_State);
-	}
+	}*/
 }
 
 #define BOOST_TIME 4000
