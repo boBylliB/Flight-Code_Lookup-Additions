@@ -16,9 +16,9 @@ float target_yaw = 0.0;
 float int_pitch = 0.0; 
 float int_yaw = 0.0;
 
-void PIDcontrol(float orient[6], float outputang[2], unsigned long dt) {
 
   //Assign orientation values to pitch, yaw, pitch_rate, and yaw_rate variables
+void PIDcontrol(float orient[6], float** outputang, unsigned long dt) {
   float pitch = orient[1];
   float yaw = orient[2];
   float pitch_rate = orient[4];
@@ -46,8 +46,8 @@ void PIDcontrol(float orient[6], float outputang[2], unsigned long dt) {
   float output_yaw = prop_yaw + int_yaw - der_yaw;
 
   //Updating outputang[] array with PID processed correction angles
-  outputang[1] = output_pitch;
-  outputang[2] = output_yaw;
   
 }
 
+  *outputang[1] = output_pitch;
+  *outputang[2] = output_yaw; 
