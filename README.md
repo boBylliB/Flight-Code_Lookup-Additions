@@ -1,7 +1,7 @@
-This is code for thrust vectoring a rocket motor. We do this to rotate the rocket back onto a certain path if it gets shifted somehow during flight. Currently we thrust vector to keep the rocket oriented upward. The orientation of the rocket thrust is changed by rotating the rocket motor with servos, both of which are attached to a gimbal.
+This repository contains code for thrust vectoring a rocket motor. We do this to rotate the rocket back onto a certain path if it gets shifted somehow during flight. Currently we thrust vector to keep the rocket oriented upward. The orientation of the rocket thrust is changed by rotating the rocket motor with servos, both of which are attached to a gimbal.
 
 Electronics we use:
-Teensy microcontroller: 
+Teensy microcontroller: Controls the accelerometer and servos; all data goes through this and is logged/processed.
 BNO055: 6-axis Accelerometer/gyroscope, measures acceleration in 3 axes and rotation about 3 axes.
 Servos: Turns the gimbal to orient the rocket motor.
 
