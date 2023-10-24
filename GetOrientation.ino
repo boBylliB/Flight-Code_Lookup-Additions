@@ -2,17 +2,18 @@ void orientation(float orient[6]) {
 	// Create quaternion object and get quaternion data from BNO055
 	imu::Quaternion quat = bno.getQuat();
 
-	// Get conjugate of quaternion from BNO055
+	/* // Get conjugate of quaternion from BNO055
 	imu::Quaternion quatconj = quaternionConjugate(quat);
+ 	*/
 
 	// Create 3-axis vector for angular velocity
 	imu::Vector<3> angvel = bno.getVector(Adafruit_BNO055::VECTOR_GYROSCOPE);
 
 	// Assign conjugate quaternion values to variables
-	float qw = quatconj.w();
-	float qx = quatconj.x();
-	float qy = quatconj.y();
-	float qz = quatconj.z();
+	float qw = quat.w();
+	float qx = quat.x();
+	float qy = quat.y();
+	float qz = quat.z();
 
 	// Get angular rate data from BNO055
 	float pitch_rate = angvel.x();
@@ -44,14 +45,14 @@ void quaternionToEuler(float qx, float qy, float qz, float qw, float* pitch, flo
 	*roll = atan2(2.0 * (qw * qz + qx * qy), 1.0 - 2.0 * (qy * qy + qz * qz)) * 180.0 / M_PI;
 }
 
-imu::Quaternion quaternionConjugate(imu::Quaternion quat) {
+/* imu::Quaternion quaternionConjugate(imu::Quaternion quat) {
 	imu::Quaternion conj;
 	conj.w() = quat.w();
 	conj.x() = -quat.x();
 	conj.y() = -quat.y();
 	conj.z() = -quat.z();
 	return conj;  
-}
+} */
 
 void plotOrientation(float pitch, float yaw, float roll) {
 	// Display angles in the Serial Plotter
