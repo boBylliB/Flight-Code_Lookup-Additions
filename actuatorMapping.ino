@@ -1,9 +1,9 @@
-#define actuator1Forward 1
+#define actuator1Forward  0
 #define actuator1Backward 1
-#define actuator2Forward 1
-#define actuator2Backward 1
-#define actuator3Forward 1
-#define actuator3Backward 1
+#define actuator2Forward  2
+#define actuator2Backward 3
+#define actuator3Forward  4
+#define actuator3Backward 5
 
 struct actuator {
       byte forwardPin, backwardPin;
