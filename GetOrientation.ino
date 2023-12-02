@@ -25,14 +25,14 @@ void orientation(float orient[6]) {
 	quaternionToEuler(qx,qy,qz,qw,&pitch,&yaw,&roll);
 
 	// Assigning Pitch, Yaw, and Roll to elements of orient[] array
-	orient[1] = pitch;
-	orient[2] = yaw;
-	orient[3] = roll;
+	orient[0] = pitch;
+	orient[1] = yaw;
+	orient[2] = roll;
 
 	// Assigning Pitch rate, Yaw rate, and Roll rate to elements of orient[] array
-	orient[4] = pitch_rate;
-	orient[5] = yaw_rate;
-	orient[6] = roll_rate;
+	orient[3] = pitch_rate;
+	orient[4] = yaw_rate;
+	orient[5] = roll_rate;
 
 	// Plotting Pitch, Yaw, and Roll
 	plotOrientation(pitch,yaw,roll);
@@ -56,12 +56,10 @@ void quaternionToEuler(float qx, float qy, float qz, float qw, float* pitch, flo
 
 void plotOrientation(float pitch, float yaw, float roll) {
 	// Display angles in the Serial Plotter
-	Serial.print("Pitch:");
+	Serial.print("Pitch: ");
 	Serial.print(pitch);
-	Serial.print(",");
-	Serial.print("Yaw:");
+	Serial.print("\tYaw: ");
 	Serial.println(yaw);
-	Serial.print(",");
-	Serial.print("Roll:");
+	Serial.print("\tRoll: ");
 	Serial.println(roll);
 }
