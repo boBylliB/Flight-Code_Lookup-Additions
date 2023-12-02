@@ -53,7 +53,7 @@ void driveActuators(float* lengthInputs) {
   float lengthTransient = 0.5*accel*pow(accelTime, 2); // m
   actuator actuators[3];
 
-  for (int i = 1; i <= 3; ++i) {
+  for (int i = 0; i <= 2; ++i) {
     actuators[i].forwardPin = 2 * (i-1);
     actuators[i].backwardPin = 2*i;
     if (iteration == 0) {
@@ -75,7 +75,7 @@ void driveActuators(float* lengthInputs) {
   qsort(actuators, 3, sizeof(actuator), compareDriveTimes);
 
   // Slowing down the other two actuators to have the same drive time as the longest one
-  for (int i = 1; i <= 2; ++i) {
+  for (int i = 0; i <= 1; ++i) {
     actuators[i].pwm = actuators[i].driveTime/actuators[3].driveTime*255;
     actuators[i].driveTime = actuators[i].driveTime / actuators[i].pwm * 255; // ms
   }
@@ -84,17 +84,17 @@ void driveActuators(float* lengthInputs) {
   qsort(actuators, 3, sizeof(actuator), compareDriveTimes);
 
   // Driving actuators
-  for (int i = 1; i <= 3; ++i) {
+  for (int i = 0; i <= 2; ++i) {
     analogWrite(actuatorDirection(actuators[i].displacement, actuators[i].forwardPin, actuators[i].backwardPin), actuators[i].pwm);
   }
-  for (int i = 1; i <= 3; ++i) {
+  for (int i = 0; i <= 2; ++i) {
     delay(actuators[i].driveTime);
     analogWrite(actuatorDirection(actuators[i].displacement, actuators[i].forwardPin, actuators[i].backwardPin), 0);
   }
 
   // Set initial conditions for next iteration
+  actuators[0].currentLength = lengthInputs[0]; // m
   actuators[1].currentLength = lengthInputs[1]; // m
   actuators[2].currentLength = lengthInputs[2]; // m
-  actuators[3].currentLength = lengthInputs[3]; // m
   ++iteration;
 }
