@@ -26,20 +26,20 @@ const int userButtonDelay = 2000;
 #define actuator3Backward 5
 
 struct actuator {
-  byte forwardPin, backwardPin;
-  float currentLength, displacement, driveTime;
-  int pwm;
+	byte forwardPin, backwardPin;
+	float currentLength, displacement, driveTime;
+	int pwm;
 };
 
 void setup() {
-	pinMode(userButtonPin, INPUT);
+  pinMode(userButtonPin, INPUT);
 	
-	pinMode(buzzerPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
 	
-	pinMode(LEDPin_green, OUTPUT);
-	pinMode(LEDPin_yellow, OUTPUT);
-	pinMode(LEDPin_red, OUTPUT);
-	pinMode(LEDPin_blue, OUTPUT);
+  pinMode(LEDPin_green, OUTPUT);
+  pinMode(LEDPin_yellow, OUTPUT);
+  pinMode(LEDPin_red, OUTPUT);
+  pinMode(LEDPin_blue, OUTPUT);
 
   pinMode(actuator1Forward, OUTPUT);
   pinMode(actuator1Backward, OUTPUT);
@@ -237,34 +237,34 @@ void LaunchReady() {
 #define BOOST_TIME 4000
 void Boost() {
 	// Acquire orientation data
-  float orient[6];
-  unsigned long lastTime;
-  float* outputang = (float*)malloc(2*sizeof(float));
+	float orient[6];
+	unsigned long lastTime;
+	float* outputang = (float*)malloc(2*sizeof(float));
 	orientation(orient);
 	// PID actuator positions
 	PIDcontrol(orient, outputang, (millis()-lastTime));
 	float lengthInputs[3];// = getLengths(1,1); // inputs for getLengths taken from PIDcontrol.ino
 	// Move Servos
-  driveActuators(lengthInputs);
+	driveActuators(lengthInputs);
 	// TODO: Log data to SD IO
-  String outputString = String(orient[0]) + "\t" + String(orient[1]) + "\t" + String(orient[2]);
-  BenchFile = SD.open("orientation.txt", FILE_WRITE);
+	String outputString = String(orient[0]) + "\t" + String(orient[1]) + "\t" + String(orient[2]);
+	BenchFile = SD.open("orientation.txt", FILE_WRITE);
 	if (BenchFile) {
-    Serial.println("Writing to orientation.txt");
-    BenchFile.println(outputString);
+		Serial.println("Writing to orientation.txt");
+		BenchFile.println(outputString);
 	} else {
-    int code[] = {LONG_CODE, SHORT_CODE};
+		int code[] = {LONG_CODE, SHORT_CODE};
 		CodeFailure(code);
-  }
+	}
 	
 	if (millis() - FlightStateTimer > BOOST_TIME) {
 		// Deactivate actuators
 		analogWrite(actuator1Forward, 0);
-    analogWrite(actuator1Backward, 0);
-    analogWrite(actuator2Forward, 0);
-    analogWrite(actuator2Backward, 0);
-    analogWrite(actuator3Forward, 0);
-    analogWrite(actuator3Backward, 0);
+		analogWrite(actuator1Backward, 0);
+		analogWrite(actuator2Forward, 0);
+    		analogWrite(actuator2Backward, 0);
+    		analogWrite(actuator3Forward, 0);
+    		analogWrite(actuator3Backward, 0);
 
 		SwitchStateTo(Coast_State);
 	}
@@ -436,20 +436,20 @@ void driveActuators(float* lengthInputs) {
   // TODO: Find actual max speed and acceleration time
 	float maxSpeed = 3; // m/s
 	float accel = 3; // m/s^2
-  float accelTime = maxSpeed/accel; // s
-  float lengthTransient = 0.5*accel*pow(accelTime, 2); // m
-  actuator actuators[3];
+  	float accelTime = maxSpeed/accel; // s
+  	float lengthTransient = 0.5*accel*pow(accelTime, 2); // m
+  	actuator actuators[3];
 
   for (int i = 0; i <= 2; ++i) {
     actuators[i].forwardPin = 2 * (i-1);
     actuators[i].backwardPin = 2*i;
     if (iteration == 0) {
-      // TODO: Find actual neutral length
-	    actuators[i].currentLength = 1; // m, same length for all actuators when motor is straight
+	// TODO: Find actual neutral length
+    	actuators[i].currentLength = 1; // m, same length for all actuators when motor is straight
     }
     actuators[i].displacement = lengthInputs[i] - actuators[i].currentLength;
 
-	  // Calculating drive times for actuators at max power (function of desired length and current length)
+    // Calculating drive times for actuators at max power (function of desired length and current length)
     if (lengthInputs[i] >= lengthTransient) {
       //length1 = currentLength1 + lengthTransient*t/accelTime; // m
       actuators[i].driveTime = abs((lengthInputs[i] - actuators[i].currentLength))*accelTime/lengthTransient*1000; // ms
