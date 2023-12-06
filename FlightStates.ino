@@ -89,7 +89,10 @@ void Boost() {
 	// TODO: Log data to SD IO
 	
 	if (millis() - FlightStateTimer > BOOST_TIME) {
-		// TODO: Deactivate servos
+		// TODO: Set servos to neutral position
+
+		servoA.detach(SERVOA_PIN);
+		servoB.detach(SERVOB_PIN);
 		
 		SwitchStateTo(Coast_State);
 	}
