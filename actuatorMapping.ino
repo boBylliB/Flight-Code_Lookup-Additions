@@ -61,10 +61,10 @@ void getLengths(float inputPitch, float inputYaw, float* lengths, File* dataFile
   // Combine the two and take into account the 3 length values per angle to find the actual file locations
   byte tableData[12];
   byte* dataPtr = tableData;
-  dataFile.seek((pitchIdx*tableYawRange.count + yawIdx) * 3);
-  dataFile.read(tableData, 6);
-  dataFile.seek(((pitchIdx+1)*tableYawRange.count + yawIdx) * 3);
-  dataFile.read(tableData+6, 6);
+  dataFile->seek((pitchIdx*tableYawRange.count + yawIdx) * 3);
+  dataFile->read(dataPtr, 6);
+  dataFile->seek(((pitchIdx+1)*tableYawRange.count + yawIdx) * 3);
+  dataFile->read(dataPtr+6, 6);
   // Interpolate between the two to get the resulting length output
   // Since the length is a function of both pitch and yaw, we use bilinear interpolation
   // Yaw was arbitrarily chosen to go first, but order shouldn't matter
@@ -220,18 +220,22 @@ void readLengthsFromFile(const char* sourceFileName, File* targetFile) {
   buffer = "";
   rlen = sourceFile.available();
   currentVar = 0;
+  bool emptyBuffer = true;
   for (int count = 0; count < rlen; count++, ch = sourceFile.read()) {
-    if (ch == ' ' || ch == '\n') {
+    if ((ch == ' ' || ch == '\n') && !emptyBuffer) {
       if (!(currentVar == 0 || currentVar == 1)) {
         // Length, no conversion is needed
         // We ignore angle, as it should come in correctly from the MATLAB
-        targetFile.write((byte)buffer.toInt())
+        targetFile->write((byte)buffer.toInt())
       }
       buffer = "";
+      emptyBuffer = true;
       currentVar = (currentVar + 1) % 6;
     }
-    else
+    else {
+      emptyBuffer = false;
       buffer += ch;
+    }
   }
   // Close the file
   sourceFile.close();

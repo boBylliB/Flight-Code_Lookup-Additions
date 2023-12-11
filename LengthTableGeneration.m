@@ -257,7 +257,7 @@ function writeTableToFile(filename, header, P, Y, c, L)
     end
     fprintf(fileID, '%s\n', repelem('-',1,50));
     fprintf(fileID, "Length Table generated on %s\n", string(datetime));
-    fprintf(fileID, "The constants struct utilized the following:\n- phi\t= %f\n- count\t= %d\n- w\t= %f\n- h\t= %f\n- d\t= %f\n- r\t= %f\n", ...
+    fprintf(fileID, "The constants struct utilized the following:\n- phi\t-> %f\n- count\t-> %d\n- w\t-> %f\n- h\t-> %f\n- d\t-> %f\n- r\t-> %f\n", ...
                                                                    c.phi,     c.count,         c.w,       c.h,       c.d,       c.r);
     fprintf(fileID, "Pitch ranges from %f to %f\nYaw ranges from   %f to %f",min(P), max(P), min(Y), max(Y));
     fprintf(fileID, '\n%s\n', repelem('=',1,50));
@@ -292,6 +292,6 @@ function writeTableToFile(filename, header, P, Y, c, L)
     fclose(fileID);
 
     % Calculate estimated data size
-    fprintf("Estimated table size once loaded: %d kB", ceil(packedLineSize*length(P)*length(Y)/1024));
-    fprintf("Estimated compressed table size:  %d kB", ceil(c.count*length(P)*length(Y)/1024));
+    fprintf("Estimated table size once loaded: %d kB\n", ceil(packedLineSize*length(P)*length(Y)/1024));
+    fprintf("Estimated compressed table size:  %d kB\n", ceil(c.count*length(P)*length(Y)/1024));
 end
