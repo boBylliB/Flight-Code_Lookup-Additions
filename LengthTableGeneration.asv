@@ -20,8 +20,8 @@ animatePosition(P, Y, c, 11, 1, 5)
 P = linspace(-45,45,101);
 Y = P;
 tic
-[centralMotorMounts, structuralMounts] = generateCircularMounts(c);
-[L1, ~] = generateTable(P, Y, [0 0 -c.d], c.count, centralMotorMounts, structuralMounts);
+[motorMounts, structuralMounts] = generateCircularMounts(c);
+[L1, ~] = generateTable(P, Y, motorMounts, structuralMounts);
 toc
 fprintf("Pitch Diff: %f\n", P(2)-P(1));
 L1 = 50 .* L1 ./ max(max(max(L1)));
@@ -57,7 +57,7 @@ function displayPosition(P, Y, c, pitchIdx, yawIdx, resolution)
     end
     % Draw linear actuator lines
     [centralMotorMounts, structuralMounts] = generateCircularMounts(c);
-    [L, motorMounts] = generateTable(P, Y, [0 0 -c.d], c.count, centralMotorMounts, structuralMounts);
+    [L, motorMounts] = generateTable(P, Y, centralMotorMounts, structuralMounts);
     for idx = 1:c.count
         plot3([structuralMounts(idx,1) motorMounts(idx,pitchIdx,yawIdx,1)],[structuralMounts(idx,2) motorMounts(idx,pitchIdx,yawIdx,2)],[structuralMounts(idx,3) motorMounts(idx,pitchIdx,yawIdx,3)])
     end
@@ -101,7 +101,7 @@ function animatePosition(P, Y, c, resolution, loops, loopDuration)
     end
     % Draw linear actuator lines
     [centralMotorMounts, structuralMounts] = generateCircularMounts(c);
-    [~, motorMounts] = generateTable(P, Y, [0 0 -c.d], c.count, centralMotorMounts, structuralMounts);
+    [~, motorMounts] = generateTable(P, Y, centralMotorMounts, structuralMounts);
     for idx = 1:c.count
         actuatorPlots(idx) = plot3([structuralMounts(idx,1) motorMounts(idx,1,1,1)],[structuralMounts(idx,2) motorMounts(idx,1,1,2)],[structuralMounts(idx,3) motorMounts(idx,1,1,3)]);
     end
@@ -202,7 +202,7 @@ function [centralMotorMounts, structuralMounts] = generateCircularMounts(c)
         centralMotorMounts(idx, 3) = -c.h; % z
     end
 end
-function [L, motorMounts] = generateTable(P, Y, origin, count, centralMotorMounts, structuralMounts)
+function [L, motorMounts] = generateTable(P, Y, count, centralMotorMounts, structuralMounts)
     % We define the y axis as pointing in the same direction as the Pitch
     % direction, and the x axis as pointing in the same direction as the
     % Yaw direction
@@ -212,15 +212,15 @@ function [L, motorMounts] = generateTable(P, Y, origin, count, centralMotorMount
     for idx = 1:count
         for pitchIdx = 1:length(P)
             for yawIdx = 1:length(Y)
-                motorMounts(idx,pitchIdx,yawIdx,:) = rotatePoint(origin, centralMotorMounts(idx,:), P(pitchIdx), Y(yawIdx));
+                motorMounts(idx,pitchIdx,yawIdx,:) = rotatePoint([0 0 -c.d], centralMotorMounts(idx,:), P(pitchIdx), Y(yawIdx));
             end
         end
     end
     % All of those motor mount coordinates can be used with the structural
     % mount coordinates to get length targets for every linear actuator
-    L = zeros([count length(P) length(Y)]);
+    L = zeros([c.count length(P) length(Y)]);
     difference = zeros([length(P) length(Y) 3]);
-    for idx = 1:count
+    for idx = 1:c.count
         for pitchIdx = 1:length(P)
             for yawIdx = 1:length(Y)
                 difference(pitchIdx,yawIdx,1) = abs(motorMounts(idx,pitchIdx,yawIdx,1) - structuralMounts(idx,1));
